@@ -11,6 +11,7 @@ import (
 type Options struct {
    Pid int `short:"p" long:"pid" default:"" description:"PID"`
    Name string `short:"n" long:"name" default:"" description:"Name of script"`
+   Signal int `short:"s" long:"signal" default:"4" description:"Posix signal, Default SIGILL"`
 }
 func main() {
     var opts Options
