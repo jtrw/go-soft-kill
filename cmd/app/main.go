@@ -33,15 +33,18 @@ func main() {
 //              log.Fatal(err)
 //          }
          pid := opts.Pid
-
-         process, err := os.FindProcess(int(pid))
-         if err != nil {
-             msg := fmt.Sprintf("Failed to find process: %s\n", err)
-             cli.Error(msg)
-         } else {
-             err := process.Signal(syscall.Signal(opts.Signal))
-             msg := fmt.Sprintf("process.Signal on pid %d returned: %v\n", pid, err)
-             cli.Info(msg)
-         }
+         terminateProcessByPid(pid)
     }
+}
+
+func terminateProcessByPid(pid int) {
+     process, err := os.FindProcess(pid)
+     if err != nil {
+         msg := fmt.Sprintf("Failed to find process: %s\n", err)
+         cli.Error(msg)
+     } else {
+         err := process.Signal(syscall.Signal(opts.Signal))
+         msg := fmt.Sprintf("process.Signal on pid %d returned: %v\n", pid, err)
+         cli.Info(msg)
+     }
 }
