@@ -5,7 +5,7 @@ import (
   "os"
   //"strconv"
   "syscall"
- // "os/exec"
+  "os/exec"
   "log"
   "github.com/jessevdk/go-flags"
   cli "github.com/soft-kill/v1/cmd/app/utils"
@@ -28,12 +28,7 @@ func main() {
     }
 
     if opts.Pid > 0 {
-        // pid, err := strconv.ParseInt(opts.Pid, 10, 64)
-//          if err != nil {
-//              log.Fatal(err)
-//          }
-         pid := opts.Pid
-         terminateProcessByPid(pid)
+         terminateProcessByPid(opts.Pid)
     }
 }
 
@@ -47,4 +42,15 @@ func terminateProcessByPid(pid int) {
          msg := fmt.Sprintf("process.Signal on pid %d returned: %v\n", pid, err)
          cli.Info(msg)
      }
+}
+
+func findProcessByName(name string) {
+    cmd := exec.Command("ps", "aux", "|", "grep", name)
+    stdout, err := cmd.Output()
+
+    if err != nil {
+        fmt.Println(err.Error())
+        return
+    }
+    fmt.Println(stdout)
 }
