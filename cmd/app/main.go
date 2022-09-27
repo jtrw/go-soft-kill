@@ -13,7 +13,7 @@ import (
 
 
 type Options struct {
-   Pid int `short:"p" long:"pid" default:"" description:"PID"`
+   Pid int `short:"p" long:"pid" default:"0" description:"PID"`
    Name string `short:"n" long:"name" default:"" description:"Name of script"`
    Signal int `short:"s" long:"signal" default:"9" description:"Posix signal, Default SIGILL=4"`
 }
@@ -26,13 +26,18 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
-
-    if opts.Pid > 0 {
-         terminateProcessByPid(opts.Pid)
+    if len(opts.Name) > 0 {
+        findProcessByName(opts.Name)
+        return
     }
+    if opts.Pid > 0 {
+         terminateProcessByPid(opts)
+    }
+
 }
 
-func terminateProcessByPid(pid int) {
+func terminateProcessByPid(opts Options) {
+     pid := opts.Pid
      process, err := os.FindProcess(pid)
      if err != nil {
          msg := fmt.Sprintf("Failed to find process: %s\n", err)
@@ -45,12 +50,13 @@ func terminateProcessByPid(pid int) {
 }
 
 func findProcessByName(name string) {
-    cmd := exec.Command("ps", "aux", "|", "grep", name)
+    command := fmt.Sprintf("ps aux | grep %s", name)
+    cmd := exec.Command("bash", "-c", command)
     stdout, err := cmd.Output()
 
     if err != nil {
         fmt.Println(err.Error())
         return
     }
-    fmt.Println(stdout)
+    fmt.Println(string(stdout))
 }
