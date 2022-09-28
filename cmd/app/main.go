@@ -50,7 +50,7 @@ func terminateProcessByPid(opts Options) {
 }
 
 func findProcessByName(name string) {
-    command := fmt.Sprintf("ps aux | grep %s", name)
+    command := fmt.Sprintf("ps aux | grep %s | awk '{ print $2, $12 }'", name)
     cmd := exec.Command("bash", "-c", command)
     stdout, err := cmd.Output()
 
